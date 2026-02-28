@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ToolHub — Free Online Tools</title>
+<meta name="description" content="Free online tools: word counter, password generator, BMI calculator, age calculator, tip calculator, and more. No signup required.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --card: #1a1a24;
+    --border: #2a2a3a;
+    --accent: #00e5a0;
+    --accent2: #7c6aff;
+    --text: #f0f0f8;
+    --muted: #7a7a9a;
+    --glow: 0 0 30px rgba(0,229,160,0.15);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 10;
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    background: rgba(10,10,15,0.8);
+    position: sticky;
+    top: 0;
+  }
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+  .logo span { color: var(--accent); }
+  .tagline { color: var(--muted); font-size: 0.85rem; }
+
+  .hero {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 80px 20px 60px;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 16px;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+    text-shadow: 0 0 40px rgba(0,229,160,0.4);
+  }
+  .hero p {
+    color: var(--muted);
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  /* Ad banner placeholder */
+  .ad-banner {
+    max-width: 728px;
+    margin: 0 auto 20px;
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .tools-section {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+  }
+
+  .tool-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: fadeUp 0.6s ease both;
+  }
+  .tool-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--glow);
+    transform: translateY(-2px);
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .tool-card:nth-child(1) { animation-delay: 0.05s; }
+  .tool-card:nth-child(2) { animation-delay: 0.1s; }
+  .tool-card:nth-child(3) { animation-delay: 0.15s; }
+  .tool-card:nth-child(4) { animation-delay: 0.2s; }
+  .tool-card:nth-child(5) { animation-delay: 0.25s; }
+  .tool-card:nth-child(6) { animation-delay: 0.3s; }
+
+  .card-header {
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .card-icon.green { background: rgba(0,229,160,0.12); }
+  .card-icon.purple { background: rgba(124,106,255,0.12); }
+  .card-icon.orange { background: rgba(255,160,60,0.12); }
+  .card-icon.blue { background: rgba(60,180,255,0.12); }
+  .card-icon.pink { background: rgba(255,100,160,0.12); }
+  .card-icon.yellow { background: rgba(255,220,60,0.12); }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+  }
+  .card-desc { font-size: 0.8rem; color: var(--muted); }
+  .card-body { padding: 20px 24px; }
+
+  /* Inputs */
+  textarea, input[type="text"], input[type="number"], input[type="date"], select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+    resize: vertical;
+  }
+  textarea:focus, input:focus, select:focus { border-color: var(--accent); }
+  select option { background: var(--surface); }
+
+  .row { display: flex; gap: 10px; margin-bottom: 12px; }
+  .row > * { flex: 1; }
+  .mb { margin-bottom: 12px; }
+
+  .btn {
+    padding: 10px 18px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    margin-top: 4px;
+  }
+  .btn:hover { background: #00ffb3; transform: scale(1.01); }
+  .btn.secondary {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn.secondary:hover { border-color: var(--accent); color: var(--accent); background: var(--surface); }
+
+  .result {
+    margin-top: 14px;
+    padding: 14px;
+    background: var(--surface);
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
+    font-size: 0.9rem;
+    display: none;
+    word-break: break-all;
+  }
+  .result.show { display: block; }
+  .result strong { color: var(--accent); font-size: 1.2rem; }
+
+  .stats { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+  .stat-box {
+    flex: 1;
+    min-width: 80px;
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .stat-box .num { font-family: 'Syne', sans-serif; font-size: 1.4rem; color: var(--accent); }
+  .stat-box .lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+
+  .pw-display {
+    font-family: monospace;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    padding: 14px;
+    background: var(--surface);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-top: 12px;
+    word-break: break-all;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 6px;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .strength-bar {
+    height: 4px;
+    border-radius: 2px;
+    background: var(--border);
+    margin-top: 8px;
+    overflow: hidden;
+  }
+  .strength-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.4s, background 0.4s;
+  }
+
+  .checkboxes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    cursor: pointer;
+    color: var(--muted);
+  }
+  .checkbox-label input { accent-color: var(--accent); width: 14px; height: 14px; }
+
+  .color-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; }
+  input[type="color"] {
+    width: 50px;
+    height: 42px;
+    padding: 2px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    cursor: pointer;
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    header { padding: 16px 20px; }
+    .hero { padding: 50px 16px 40px; }
+    .tools-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Tool<span>Hub</span></div>
+  <div class="tagline">Free tools, no signup</div>
+</header>
+
+<section class="hero">
+  <h1>All Your Tools,<br><em>Completely Free</em></h1>
+  <p>Word counters, calculators, generators — everything you need in one place.</p>
+</section>
+
+<div class="tools-section">
+
+  <!-- Ad Placeholder Top -->
+  <div class="ad-banner" style="margin-bottom:40px;">
+    <!-- Google AdSense Banner 728x90 -->
+    AD SPACE — 728 × 90
+  </div>
+
+  <div class="section-label">⚡ Tools</div>
+  <div class="tools-grid">
+
+    <!-- 1. Word Counter -->
+    <div class="tool-card">
+      <div class="card-header">
+        <div class="card-icon green">📝</div>
+        <div>
+          <div class="card-title">Word Counter</div>
+          <div class="card-desc">Count words, characters & reading time</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <textarea id="wc-input" rows="5" placeholder="Paste or type your text here..." oninput="countWords()"></textarea>
+        <div class="stats">
+          <div class="stat-box"><div class="num" id="wc-words">0</div><div class="lbl">Words</div></div>
+          <div class="stat-box"><div class="num" id="wc-chars">0</div><div class="lbl">Chars</div></div>
+          <div class="stat-box"><div class="num" id="wc-sentences">0</div><div class="lbl">Sentences</div></div>
+          <div class="stat-box"><div class="num" id="wc-read">0</div><div class="lbl">Min Read</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Password Generator -->
+    <div class="tool-card">
+      <div class="card-header">
+        <div class="card-icon purple">🔐</div>
+        <div>
+          <div class="card-title">Password Generator</div>
+          <div class="card-desc">Create strong, secure passwords</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="mb">
+          <label style="font-size:0.82rem;color:var(--muted);display:flex;justify-content:space-between;margin-bottom:6px;">
+            Length <span id="pw-len-val">16</span>
+          </label>
+          <input type="range" min="6" max="64" value="16" id="pw-length" oninput="document.getElementById('pw-len-val').textContent=this.value; generatePassword()" style="width:100%;accent-color:var(--accent)">
+        </div>
+        <div class="checkboxes">
+          <label class="checkbox-label"><input type="checkbox" id="pw-upper" checked onchange="generatePassword()"> Uppercase</label>
+          <label class="checkbox-label"><input type="checkbox" id="pw-lower" checked onchange="generatePassword()"> Lowercase</label>
+          <label class="checkbox-label"><input type="checkbox" id="pw-nums" checked onchange="generatePassword()"> Numbers</label>
+          <label class="checkbox-label"><input type="checkbox" id="pw-sym" onchange="generatePassword()"> Symbols</label>
+        </div>
+        <div class="pw-display">
+          <span id="pw-output" style="color:var(--accent)">Click Generate</span>
+          <button class="copy-btn" onclick="copyPW()">Copy</button>
+        </div>
+        <div class="strength-bar"><div class="strength-fill" id="pw-strength" style="width:0%"></div></div>
+        <div style="font-size:0.75rem;color:var(--muted);margin-top:4px;" id="pw-strength-label"></div>
+        <button class="btn" style="margin-top:12px;" onclick="generatePassword()">Generate Password</button>
+      </div>
+    </div>
+
+    <!-- 3. BMI Calculator -->
+    <div class="tool-card">
+      <div class="card-header">
+        <div class="card-icon orange">⚖️</div>
+        <div>
+          <div class="card-title">BMI Calculator</div>
+          <div class="card-desc">Check your Body Mass Index instantly</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div>
+            <label style="font-size:0.8rem;color:var(--muted);">Weight (kg)</label>
+            <input type="number" id="bmi-weight" placeholder="70" style="margin-top:4px;">
+          </div>
+          <div>
+            <label style="font-size:0.8rem;color:var(--muted);">Height (cm)</label>
+            <input type="number" id="bmi-height" placeholder="175" style="margin-top:4px;">
+          </div>
+        </div>
+        <button class="btn" onclick="calcBMI()">Calculate BMI</button>
+        <div class="result" id="bmi-result"></div>
+      </div>
+    </div>
+
+    <!-- 4. Age Calculator -->
+    <div class="tool-card">
+      <div class="card-header">
+        <div class="card-icon blue">🎂</div>
+        <div>
+          <div class="card-title">Age Calculator</div>
+          <div class="card-desc">Find your exact age in years, months & days</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <label style="font-size:0.8rem;color:var(--muted);">Date of Birth</label>
+        <input type="date" id="age-dob" style="margin-top:4px;margin-bottom:12px;">
+        <button class="btn" onclick="calcAge()">Calculate Age</button>
+        <div class="result" id="age-result"></div>
+      </div>
+    </div>
+
+    <!-- 5. Tip Calculator -->
+    <div class="tool-card">
+      <div class="card-header">
+        <div class="card-icon pink">💳</div>
+        <div>
+          <div class="card-title">Tip Calculator</div>
+          <div class="card-desc">Split bills & calculate tips instantly</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <label style="font-size:0.8rem;color:var(--muted);">Bill Amount ($)</label>
+        <input type="number" id="tip-bill" placeholder="50.00" style="margin-top:4px;margin-bottom:10px;">
+        <div class="row">
+          <div>
+            <label style="font-size:0.8rem;color:var(--muted);">Tip %</label>
+            <select id="tip-pct" style="margin-top:4px;">
+              <option value="10">10%</option>
+              <option value="15">15%</option>
+              <option value="18">18%</option>
+              <option value="20" selected>20%</option>
+              <option value="25">25%</option>
+              <option value="30">30%</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:0.8rem;color:var(--muted);">Split by</label>
+            <input type="number" id="tip-split" placeholder="2" value="1" style="margin-top:4px;">
+          </div>
+        </div>
+        <button class="btn" onclick="calcTip()">Calculate Tip</button>
+        <div class="result" id="tip-result"></div>
+      </div>
+    </div>
+
+    <!-- 6. Color Converter -->
+    <div class="tool-card">
+      <div class="card-header">
+        <div class="card-icon yellow">🎨</div>
+        <div>
+          <div class="card-title">Color Converter</div>
+          <div class="card-desc">Convert between HEX, RGB & HSL</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="color-row">
+          <input type="color" id="color-pick" value="#00e5a0" oninput="convertColor()">
+          <input type="text" id="color-hex" placeholder="#00e5a0" value="#00e5a0" oninput="hexInput()" style="flex:1;">
+        </div>
+        <div class="result show" id="color-result" style="display:block;">
+          <div>🟩 <strong>HEX:</strong> <span id="c-hex">#00e5a0</span></div>
+          <div style="margin-top:6px;">🔴 <strong>RGB:</strong> <span id="c-rgb">rgb(0, 229, 160)</span></div>
+          <div style="margin-top:6px;">🌀 <strong>HSL:</strong> <span id="c-hsl">hsl(161°, 100%, 45%)</span></div>
+        </div>
+        <button class="btn secondary" onclick="copyColor()" style="margin-top:10px;">Copy HEX</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Ad Placeholder Bottom -->
+  <div class="ad-banner" style="margin-top:40px;">
+    <!-- Google AdSense Banner 728x90 -->
+    AD SPACE — 728 × 90
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2025 <strong>ToolHub</strong> · Free tools for everyone · <a href="#">Privacy Policy</a> · <a href="#">Contact</a></p>
+  <p style="margin-top:8px;font-size:0.75rem;">To monetize: Sign up at <a href="https://adsense.google.com" target="_blank">google.com/adsense</a> and replace the AD SPACE divs with your AdSense code.</p>
+</footer>
+
+<script>
+// ─── WORD COUNTER ───
+function countWords() {
+  const text = document.getElementById('wc-input').value;
+  const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+  const chars = text.length;
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+  const readTime = Math.ceil(words / 200);
+  document.getElementById('wc-words').textContent = words;
+  document.getElementById('wc-chars').textContent = chars;
+  document.getElementById('wc-sentences').textContent = sentences;
+  document.getElementById('wc-read').textContent = readTime;
+}
+
+// ─── PASSWORD GENERATOR ───
+function generatePassword() {
+  const len = parseInt(document.getElementById('pw-length').value);
+  const upper = document.getElementById('pw-upper').checked;
+  const lower = document.getElementById('pw-lower').checked;
+  const nums = document.getElementById('pw-nums').checked;
+  const syms = document.getElementById('pw-sym').checked;
+  let chars = '';
+  if (upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+  if (nums) chars += '0123456789';
+  if (syms) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+  if (!chars) chars = 'abcdefghijklmnopqrstuvwxyz';
+  let pw = '';
+  for (let i = 0; i < len; i++) pw += chars[Math.floor(Math.random() * chars.length)];
+  document.getElementById('pw-output').textContent = pw;
+  const typesUsed = [upper,lower,nums,syms].filter(Boolean).length;
+  const score = Math.min(100, Math.round((len/64)*60 + typesUsed*10));
+  const bar = document.getElementById('pw-strength');
+  const label = document.getElementById('pw-strength-label');
+  bar.style.width = score + '%';
+  if (score < 40) { bar.style.background = '#ff4444'; label.textContent = 'Weak'; }
+  else if (score < 70) { bar.style.background = '#ffaa00'; label.textContent = 'Medium'; }
+  else { bar.style.background = '#00e5a0'; label.textContent = 'Strong'; }
+}
+function copyPW() {
+  const t = document.getElementById('pw-output').textContent;
+  navigator.clipboard.writeText(t).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+generatePassword();
+
+// ─── BMI CALCULATOR ───
+function calcBMI() {
+  const w = parseFloat(document.getElementById('bmi-weight').value);
+  const h = parseFloat(document.getElementById('bmi-height').value) / 100;
+  const res = document.getElementById('bmi-result');
+  if (!w || !h) { res.innerHTML = '⚠️ Please enter weight and height.'; res.classList.add('show'); return; }
+  const bmi = (w / (h * h)).toFixed(1);
+  let cat = bmi < 18.5 ? '🔵 Underweight' : bmi < 25 ? '🟢 Normal weight' : bmi < 30 ? '🟡 Overweight' : '🔴 Obese';
+  res.innerHTML = `BMI: <strong>${bmi}</strong><br><span style="color:var(--muted)">${cat}</span>`;
+  res.classList.add('show');
+}
+
+// ─── AGE CALCULATOR ───
+function calcAge() {
+  const dob = new Date(document.getElementById('age-dob').value);
+  const res = document.getElementById('age-result');
+  if (!document.getElementById('age-dob').value) { res.innerHTML = '⚠️ Please select a date.'; res.classList.add('show'); return; }
+  const now = new Date();
+  let years = now.getFullYear() - dob.getFullYear();
+  let months = now.getMonth() - dob.getMonth();
+  let days = now.getDate() - dob.getDate();
+  if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+  if (months < 0) { years--; months += 12; }
+  const totalDays = Math.floor((now - dob) / (1000*60*60*24));
+  res.innerHTML = `🎂 <strong>${years} years</strong>, ${months} months, ${days} days<br><span style="color:var(--muted)">That's ${totalDays.toLocaleString()} days alive!</span>`;
+  res.classList.add('show');
+}
+
+// ─── TIP CALCULATOR ───
+function calcTip() {
+  const bill = parseFloat(document.getElementById('tip-bill').value);
+  const pct = parseFloat(document.getElementById('tip-pct').value);
+  const split = parseInt(document.getElementById('tip-split').value) || 1;
+  const res = document.getElementById('tip-result');
+  if (!bill) { res.innerHTML = '⚠️ Please enter a bill amount.'; res.classList.add('show'); return; }
+  const tip = bill * pct / 100;
+  const total = bill + tip;
+  const perPerson = total / split;
+  res.innerHTML = `
+    💰 Tip: <strong>$${tip.toFixed(2)}</strong><br>
+    <span style="color:var(--muted)">Total: $${total.toFixed(2)}</span><br>
+    ${split > 1 ? `<span style="color:var(--accent)">Per person: $${perPerson.toFixed(2)}</span>` : ''}
+  `;
+  res.classList.add('show');
+}
+
+// ─── COLOR CONVERTER ───
+function convertColor() {
+  const hex = document.getElementById('color-pick').value;
+  document.getElementById('color-hex').value = hex;
+  updateColorDisplay(hex);
+}
+function hexInput() {
+  let hex = document.getElementById('color-hex').value.trim();
+  if (!hex.startsWith('#')) hex = '#' + hex;
+  if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+    document.getElementById('color-pick').value = hex;
+    updateColorDisplay(hex);
+  }
+}
+function updateColorDisplay(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  const rgb = `rgb(${r}, ${g}, ${b})`;
+  const max = Math.max(r,g,b)/255, min = Math.min(r,g,b)/255;
+  let h, s, l = (max+min)/2;
+  if (max === min) { h = s = 0; } else {
+    const d = max - min;
+    s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max) {
+      case r/255: h = (g/255-b/255)/d + (g<b?6:0); break;
+      case g/255: h = (b/255-r/255)/d + 2; break;
+      default: h = (r/255-g/255)/d + 4;
+    }
+    h /= 6;
+  }
+  const hsl = `hsl(${Math.round(h*360)}°, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`;
+  document.getElementById('c-hex').textContent = hex.toUpperCase();
+  document.getElementById('c-rgb').textContent = rgb;
+  document.getElementById('c-hsl').textContent = hsl;
+}
+function copyColor() {
+  navigator.clipboard.writeText(document.getElementById('color-hex').value);
+  const btn = document.querySelectorAll('.btn.secondary')[0];
+  btn.textContent = 'Copied!';
+  setTimeout(() => btn.textContent = 'Copy HEX', 1500);
+}
+updateColorDisplay('#00e5a0');
+</script>
+</body>
+</html>
